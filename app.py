@@ -4,6 +4,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import numpy as np
+import pandas as pd
 
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 Base = automap_base()
@@ -33,15 +34,21 @@ app = Flask(__name__)
 def welcome():
     return nav
 
+
 @app.route("/api/v1.0/precipitation")
 def precipitation():
-    prcp = list(np.ravel(session.query(Measurement.prcp.all()))
-    return jsonify(prcp)
+    precipitation = list(np.ravel(session.query(Measurement.date,Measurement.prcp).all()))
+    return jsonify(precipitation)
 
 @app.route("/api/v1.0/stations")
 def stations():
     stations = list(np.ravel(session.query(Station.station).all()))
     return jsonify(stations)
+
+@app.route("/api/v1.0/tobs")
+def temp():
+    temps = list(np.ravel(session.query(Measurement.date,Measurement.tobs).all()))
+    return jsonify(temps)
 
 
 
